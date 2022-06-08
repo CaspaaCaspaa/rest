@@ -2,6 +2,7 @@ package com.company.enroller.persistence;
 
 import java.util.Collection;
 
+import com.company.enroller.model.Participant;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
@@ -22,5 +23,33 @@ public class MeetingService {
 		Query query = connector.getSession().createQuery(hql);
 		return query.list();
 	}
+
+	public Meeting findById(Long id) {
+		Meeting searchedMeeting = (Meeting) connector.getSession().get(Meeting.class, id);
+		return searchedMeeting;
+	}
+
+	public Meeting create(Meeting meeting) {
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().save(meeting);
+		transaction.commit();
+		return meeting;
+	}
+
+	public Meeting addParticipantToMeeting(Meeting meeting, Participant participant) {
+		meeting.addParticipant(participant);
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().save(meeting);
+		transaction.commit();
+		return meeting;
+	}
+
+
+	public void removeMeeting(Meeting meeting) {
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().delete(meeting);
+		transaction.commit();
+	}
+
 
 }

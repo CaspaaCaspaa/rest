@@ -42,26 +42,27 @@ public class ParticipantRestController {
 		return new ResponseEntity("Unable to create. A participant with login " + participant.getLogin() + " already exist.", HttpStatus.CONFLICT);
 	}
 
-//	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-//	public ResponseEntity<?> removeParticipant(@PathVariable("id") String login) {
-//		Participant participant = participantService.findByLogin(login);
-//		if (participant == null) {
-//			return new ResponseEntity(HttpStatus.NOT_FOUND);
-//		}
-//		participantService.remove(participant);
-//		return new ResponseEntity<Participant>(participant, HttpStatus.NO_CONTENT);
-//	}
-//
-//
-//	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-//	public ResponseEntity<?> updateParticipant(@PathVariable("id") String login, String newPassword) {
-//		Participant participant = participantService.findByLogin(login);
-//		if (participant == null) {
-//			return new ResponseEntity<String>("Unable to update. User " + participant.getLogin() + " not found.",
-//					HttpStatus.NOT_FOUND);
-//		}
-//		participantService.update(participant, newPassword);
-//		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
-//	}
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> removeParticipant(@PathVariable("id") String login) {
+		Participant participant = participantService.findByLogin(login);
+		if (participant == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		participantService.remove(participant);
+		return new ResponseEntity<Participant>(participant, HttpStatus.NO_CONTENT);
+	}
+
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateParticipant(@RequestBody Participant participant) {
+		String login = participant.getLogin();
+		Participant participantCheck = participantService.findByLogin(login);
+		if (participantCheck == null) {
+			return new ResponseEntity<String>("Unable to update. User " + login + " not found.",
+					HttpStatus.NOT_FOUND);
+		}
+		participantService.update(participant,participant.getPassword());
+		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
+	}
 
 }
