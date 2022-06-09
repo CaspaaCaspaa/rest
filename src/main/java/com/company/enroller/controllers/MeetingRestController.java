@@ -94,6 +94,40 @@ public class MeetingRestController {
         return new ResponseEntity<Meeting>(meeting, HttpStatus.NO_CONTENT);
     }
 
+    //Aktualizacja spotkań
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateMeeting(@RequestBody Meeting meeting,@PathVariable("id") Long id) {
+        Meeting meetingToUpdate = meetingService.findById(id);
+        if (meetingToUpdate == null) {
+            return new ResponseEntity<String>("Unable to update. Meeting " + id.toString() + " not found.",
+                    HttpStatus.NOT_FOUND);
+        }
+        Long newMeetingId = meeting.getId();
+        if (!newMeetingId.equals(id)) {
+            return new ResponseEntity<String>("Meeting IDs are not the same !!!",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        meetingService.update(meeting,meeting.getTitle(), meeting.getDescription(), meeting.getDate());
+        return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
+    }
+
+    // Dodawanie uczestnika do spotkania
+    @RequestMapping(value = "/{id}/{login}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeUerFromMeeting( @PathVariable("id") Long id,@PathVariable("login") String login) {
+        Meeting meeting = meetingService.findById(id);
+        Participant participant = participantService.findByLogin(login);
+
+        if (meeting == null) {
+            return new ResponseEntity<String>("Unable to find. A meeting with id " + id + " doesn't exist.",HttpStatus.NOT_FOUND);
+        }
+        if (participant == null) {
+            return new ResponseEntity<String>("Unable to update. User " + login + " not found.",HttpStatus.NOT_FOUND);
+        }
+
+        meetingService.removeParticipantFromMeeting(meeting, participant);
+        return new ResponseEntity<String>("User "+ login + " is no longer in meeting with ID:" + id.toString(), HttpStatus.OK);
+    }
 
 
 //    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

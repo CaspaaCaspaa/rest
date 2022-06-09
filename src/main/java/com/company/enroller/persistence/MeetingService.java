@@ -51,5 +51,21 @@ public class MeetingService {
 		transaction.commit();
 	}
 
+	public void update(Meeting meeting, String title, String description, String date) {
+		meeting.setTitle(title);
+		meeting.setDescription(description);
+		meeting.setDate(date);
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().merge(meeting);
+		transaction.commit();
+	}
+
+	public Meeting removeParticipantFromMeeting(Meeting meeting, Participant participant) {
+		meeting.removeParticipant(participant);
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().save(meeting);
+		transaction.commit();
+		return meeting;
+	}
 
 }

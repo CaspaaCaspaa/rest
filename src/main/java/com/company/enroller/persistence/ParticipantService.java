@@ -44,7 +44,7 @@ public class ParticipantService {
 	public void update(Participant participant, String newPassword) {
 		participant.setPassword(newPassword);
 		Transaction transaction = connector.getSession().beginTransaction();
-		connector.getSession().update(participant);
+		connector.getSession().save(participant);
 		transaction.commit();
 	}
 

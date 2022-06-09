@@ -52,7 +52,6 @@ public class ParticipantRestController {
 		return new ResponseEntity<Participant>(participant, HttpStatus.NO_CONTENT);
 	}
 
-
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateParticipant(@RequestBody Participant participant) {
 		String login = participant.getLogin();
